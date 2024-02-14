@@ -10,12 +10,26 @@ import (
 	"time"
 )
 
+var coordRef = map[string]int{
+	"a": 1,
+	"b": 2,
+	"c": 3,
+	"d": 4,
+	"e": 5,
+	"f": 6,
+	"g": 7,
+	"h": 8,
+	"i": 9,
+	"j": 10,
+}
+
 type game struct {
 	playerName string
 	isRunning  bool
 	buffer     *bytes.Buffer
 	ocean      ocean
 	startedAt  time.Time
+	error      string
 }
 
 func NewGame() *game {
@@ -37,15 +51,38 @@ func (game *game) Start() {
 }
 
 func (game *game) update() {
-	//TODO proper way to read user input
-	reader := bufio.NewReader(os.Stdin)
-	userInput, _ := reader.ReadString('\n')
-	split := strings.Split(userInput, "")
+	game.error = ""
+	userInput := game.getUserInput()
+	ok, x, y := game.getCoordinates(userInput)
+	if ok {
+		game.ocean.incomingMissile(x-1, y-1)
+	}
+}
 
-	//check if hit
-	x, _ := strconv.Atoi(split[0])
-	y, _ := strconv.Atoi(split[1])
-	game.ocean.incomingMissile(x, y)
+func (game *game) getUserInput() []string {
+	reader := bufio.NewReader(os.Stdin)
+	rawInput, _ := reader.ReadString('\n')
+	userInput := strings.Fields(rawInput)
+	return userInput
+}
+
+func (game *game) getCoordinates(str []string) (bool, int, int) {
+	if len(str) != 1 {
+		game.error = "Invalid coordinates"
+		return false, 0, 0
+	}
+
+	coord := strings.Join(str, "")
+
+	x := coordRef[strings.ToLower(string(coord[0]))]
+	y, _ := strconv.Atoi(string(coord[1:]))
+
+	if x < 1 || y < 1 || x > 10 || y > 10 {
+		game.error = "Invalid coordinates"
+		return false, 0, 0
+	}
+
+	return true, x, y
 }
 
 func (game *game) loop() {

@@ -63,6 +63,7 @@ func (game *game) renderOcean() {
 }
 
 func (game *game) renderFooter() {
+	game.buffer.WriteString("Error: " + game.error + "\n")
 	game.buffer.WriteString("Enter coordinates: ")
 }
 
