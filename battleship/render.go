@@ -37,18 +37,23 @@ func (game *game) renderOcean() {
 			}
 			str := ""
 			cx := game.ocean.grid[row][col]
+			resetColor := "\u001b[0m"
 			switch cx {
 			case 2:
 				// missed
-				str = " O "
+				color := "\u001b[30;1m"
+				str = color + " * " + resetColor
 			case 3:
 				// hit
-				str = " X "
+				color := "\u001b[33;1m"
+				str = color + " X " + resetColor
 			case 4:
 				//sunk
-				str = " Z "
+				color := "\u001b[47;1m\u001b[31;1m"
+				str = color + " X " + resetColor
 			default:
-				str = " ~ "
+				color := "\u001b[36;1m"
+				str = color + " ~ " + resetColor
 			}
 			game.buffer.WriteString(str)
 			if col == 9 {
