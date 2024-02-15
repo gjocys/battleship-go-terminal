@@ -3,6 +3,7 @@ package battleship
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -25,6 +26,9 @@ var hLine = "  +" + strings.Repeat("-", 32) + "+\n"
 
 func (game *game) renderInfo() {
 	game.buffer.WriteString("Player: " + game.playerName)
+	game.buffer.WriteString("Shots: " + strconv.Itoa(game.shots) + "\n")
+	game.buffer.WriteString("Hits: " + strconv.Itoa(game.hits) + "\n")
+	game.buffer.WriteString("Sunk ships: " + strconv.Itoa(game.sunkShips) + "\n\n")
 }
 
 func (game *game) renderOcean() {

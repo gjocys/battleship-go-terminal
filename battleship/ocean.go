@@ -31,13 +31,13 @@ func (o *ocean) findShipByCoord(x int, y int) (found bool, ship *ship) {
 	return false, nil
 }
 
-func (o *ocean) incomingMissile(x int, y int) {
+func (o *ocean) incomingMissile(x int, y int) (hit bool, sunk bool) {
 	ok, ship := o.findShipByCoord(x, y)
 
 	//missed
 	if !ok {
 		o.grid[x][y] = 2
-		return
+		return false, false
 	}
 
 	//hit
@@ -50,6 +50,8 @@ func (o *ocean) incomingMissile(x int, y int) {
 	} else {
 		o.grid[x][y] = 3
 	}
+
+	return true, isSunk
 }
 
 func addShips() []*ship {

@@ -28,6 +28,9 @@ type game struct {
 	isRunning  bool
 	buffer     *bytes.Buffer
 	ocean      ocean
+	shots      int
+	hits       int
+	sunkShips  int
 	startedAt  time.Time
 	error      string
 }
@@ -55,7 +58,16 @@ func (game *game) update() {
 	userInput := game.getUserInput()
 	ok, x, y := game.getCoordinates(userInput)
 	if ok {
-		game.ocean.incomingMissile(x-1, y-1)
+		hit, sunk := game.ocean.incomingMissile(x-1, y-1)
+		game.shots++
+
+		if hit {
+			game.hits++
+		}
+
+		if sunk {
+			game.sunkShips++
+		}
 	}
 }
 
