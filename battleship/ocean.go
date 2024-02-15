@@ -7,11 +7,7 @@ type ocean struct {
 
 func newOcean() ocean {
 
-	// TODO generate ships
-	ships := []*ship{
-		newShip([][]int{{0, 1}, {0, 2}}, 2),
-	}
-
+	ships := addShips()
 	grid := make([][]int, 10)
 	for i := range grid {
 		grid[i] = make([]int, 10)
@@ -54,4 +50,42 @@ func (o *ocean) incomingMissile(x int, y int) {
 	} else {
 		o.grid[x][y] = 3
 	}
+}
+
+func addShips() []*ship {
+
+	ships := []*ship{}
+
+	shipSizes := []int{5, 4, 3, 3, 2}
+
+	for i := range shipSizes {
+		for {
+			s := newShip(shipSizes[i])
+			if !shipsCollide(ships, s) {
+				ships = append(ships, s)
+				break
+			}
+		}
+	}
+
+	return ships
+}
+
+func shipsCollide(a []*ship, b *ship) bool {
+
+	for i := range b.coord {
+		bCoordX := b.coord[i][0]
+		bCoordY := b.coord[i][1]
+		for n := range a {
+			for v := range a[n].coord {
+				aCoordX := a[n].coord[v][0]
+				aCoordY := a[n].coord[v][1]
+				if aCoordX == bCoordX && aCoordY == bCoordY {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }
